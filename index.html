@@ -262,35 +262,40 @@
             </div>
         </div>
 
-        <!-- Student Automated Registration Desk Handler System -->
+               <!-- Student Automated Registration Desk Handler System -->
         <div class="form-frame" id="form-scroll-destination">
-            <h4 style="font-size: 1.5rem; text-align: center; color: #064e3b; margin-bottom: 35px; font-weight: 400;">Course Registration Portal</h4>
-            <form action="https://formspree.io/f/mnjeyyaj" method="POST">
-                <div class="input-box">
-                    <label>Full Name</label>
-                    <input type="text" name="student_name" placeholder="e.g., Tshering Dorji" required>
-                </div>
-                <div class="input-box">
-                    <label>Contact Phone Number</label>
-                    <input type="tel" name="student_phone" placeholder="e.g., +975 17xxxxxx" required>
-                </div>
-                <div class="input-box">
-                    <label>Select Your Intended Course</label>
-                    <select name="selected_course" required>
-                        <option value="TallyPrime Advance">TallyPrime Advance Suite (6 Months)</option>
-                        <option value="Auditing Books">Auditing of Books of Accounts (1 Month)</option>
-                        <option value="Digital Literacy">Digital Literacy Training (1 Month)</option>
-                        <option value="TallyPrime Basic">TallyPrime Basic Essentials (3 Months)</option>
-                        <option value="Basic Computer">Basic Computer Applications (2 Months)</option>
-                        <option value="Advance Computer">Advance Computer Applications (3 Months)</option>
-                        <option value="Academic Tuition">All-Subject Scholastic Academic Tuition</option>
-                        <option value="Short Term AI">Short Term: AI Productivity Tools (2 Weeks)</option>
-                        <option value="Short Term Web">Short Term: Web Design Framework (1 Month)</option>
-                    </select>
-                </div>
-                <button type="submit" class="submit-btn">Submit Enrollment Form</button>
-            </form>
+            <div id="registration-form-container">
+                <h4 style="font-size: 1.5rem; text-align: center; color: #064e3b; margin-bottom: 35px; font-weight: 400;">Course Registration Portal</h4>
+                
+                <!-- NOTE: Replace YOUR_FORMSPREE_ID with your actual alphanumeric Formspree code -->
+                <form action="https://formspree.io/f/mnjeyyaj" method="POST" id="main-enrollment-form">
+                    <div class="input-box">
+                        <label>Full Name</label>
+                        <input type="text" name="student_name" placeholder="e.g., Tshering Dorji" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Contact Phone Number</label>
+                        <input type="tel" name="student_phone" placeholder="e.g., +975 17xxxxxx" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Select Your Intended Course</label>
+                        <select name="selected_course" required>
+                            <option value="TallyPrime Advance">TallyPrime Advance Suite (6 Months)</option>
+                            <option value="Auditing Books">Auditing of Books of Accounts (1 Month)</option>
+                            <option value="Digital Literacy">Digital Literacy Training (1 Month)</option>
+                            <option value="TallyPrime Basic">TallyPrime Basic Essentials (3 Months)</option>
+                            <option value="Basic Computer">Basic Computer Applications (2 Months)</option>
+                            <option value="Advance Computer">Advance Computer Applications (3 Months)</option>
+                            <option value="Academic Tuition">All-Subject Scholastic Academic Tuition</option>
+                            <option value="Short Term AI">Short Term: AI Productivity Tools (2 Weeks)</option>
+                            <option value="Short Term Web">Short Term: Web Design Framework (1 Month)</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="enroll-submit-btn" class="submit-btn">Submit Enrollment Form</button>
+                </form>
+            </div>
         </div>
+
     </section>
 
     <!-- PAGE VIEW 4: CONTACT PAGE -->
