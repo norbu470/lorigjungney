@@ -3,298 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drugyel Training Institute | Paro, Bhutan</title>
-    <!-- Stylesheets embedded directly to prevent raw text loading bugs on GitHub -->
+    <title>Lorig Jungney Training Institute | Paro, Bhutan</title>
+    <!-- Three.js for 3D graphics rendering -->
+    <script src="https://cloudflare.com"></script>
     <style>
+        /* Base Resets & Elegant Luxury Theme styling */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
-        body { background-color: #fbfbf8; color: #1e293b; overflow-x: hidden; }
+        body { background-color: #fbfbf7; color: #1e293b; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Premium Navigation Bar with Custom Logo support */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(251, 251, 248, 0.96); backdrop-filter: blur(8px); border-b: 1px solid #e2e8f0; position: fixed; top: 0; width: 100%; z-index: 100; }
-        .logo-container { display: flex; align-items: center; gap: 15px; }
-        .logo-image { height: 55px; width: auto; object-fit: contain; display: block; border-radius: 4px; }
+        /* 3D WebGL Canvas Layer Background */
+        #canvas-3d { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 0.45; }
+
+        /* Premium Navigation Header Bar */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(251, 251, 247, 0.98); border-b: 1px solid #e2e8f0; position: fixed; top: 0; width: 100%; z-index: 100; box-shadow: 0 2px 15px rgba(0,0,0,0.02); }
+        .logo-group { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 55px; width: auto; object-fit: contain; border-radius: 4px; }
         .logo-text h1 { font-size: 1.4rem; letter-spacing: 1px; color: #1e1b4b; font-weight: 700; text-transform: uppercase; }
         .logo-text p { font-size: 0.7rem; color: #64748b; font-family: sans-serif; letter-spacing: 1px; margin-top: 1px; }
-        .nav-links { display: flex; list-style: none; gap: 35px; }
-        .nav-links a { text-decoration: none; color: #334155; font-size: 0.9rem; font-weight: 600; font-family: sans-serif; letter-spacing: 1px; transition: color 0.3s; }
-        .nav-links a:hover { color: #b45309; }
-
-        /* Integrated 3D Interactive Hero Canvas Slide Engine */
-        .hero-viewport { position: relative; width: 100vw; height: 80vh; background: #0f172a; margin-top: 96px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .photo-slide-container { position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; display: flex; transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1); }
-        .img-layer { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; filter: brightness(0.45) contrast(1.05); }
-        .img-layer.active { opacity: 1; }
-        .hero-content { position: relative; z-index: 10; text-align: center; color: #ffffff; max-width: 800px; padding: 0 20px; }
-        .hero-content h2 { font-size: 3.5rem; font-weight: 400; margin-bottom: 20px; line-height: 1.2; letter-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .hero-content p { font-size: 1.2rem; color: #f1f5f9; line-height: 1.7; font-style: italic; margin-bottom: 35px; }
         
-        .btn-luxury { display: inline-block; padding: 14px 38px; background: #ffffff; color: #1e1b4b; text-decoration: none; font-family: sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s; border: 1px solid #ffffff; }
-        .btn-luxury:hover { background: transparent; color: #ffffff; transform: translateY(-2px); }
+        /* Navigation Route Button Toggles */
+        .nav-links { display: flex; list-style: none; gap: 35px; }
+        .nav-links button { background: none; border: none; color: #334155; font-size: 0.9rem; font-weight: 600; font-family: sans-serif; letter-spacing: 1px; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: all 0.3s; }
+        .nav-links button:hover, .nav-links button.active-nav { color: #b45309; border-bottom-color: #b45309; }
 
-        /* Section Layout Presets */
-        section { padding: 90px 40px; max-width: 1150px; margin: 0 auto; border-top: 1px solid #e2e8f0; }
-        .section-title { font-size: 2.1rem; color: #1e1b4b; text-align: center; margin-bottom: 12px; font-weight: 400; }
-        .section-subtitle { font-size: 0.85rem; font-family: sans-serif; color: #b45309; text-transform: uppercase; letter-spacing: 2px; text-align: center; margin-bottom: 55px; font-weight: 600; }
+        /* Multi-Page Structural Routing Layout */
+        .page-view { display: none; width: 100%; min-height: 75vh; padding: 140px 40px 80px 40px; }
+        .page-view.active-page { display: block; animation: viewSlideIn 0.5s ease-in-out; }
+        @keyframes viewSlideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* About Block Grid Layout */
-        .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
-        .about-text p { font-size: 1.1rem; color: #475569; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
-        .about-badge { background: #ffffff; border: 1px solid #cbd5e1; padding: 30px; border-left: 4px solid #b45309; box-shadow: 0 10px 30px rgba(0,0,0,0.01); }
-        .badge-title { font-size: 1.8rem; color: #1e1b4b; margin-bottom: 10px; }
-        .badge-desc { font-family: sans-serif; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        /* Typography Global Definitions */
+        .sec-title { font-size: 2.3rem; color: #1e1b4b; text-align: center; margin-bottom: 12px; font-weight: 400; letter-spacing: 1px; }
+        .sec-subtitle { font-size: 0.85rem; font-family: sans-serif; color: #b45309; text-transform: uppercase; letter-spacing: 2px; text-align: center; margin-bottom: 55px; font-weight: 600; }
 
-        /* Course Dynamic Interactive Selection Box Slider */
-        .course-slider-box { max-width: 800px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; position: relative; box-shadow: 0 20px 45px rgba(0,0,0,0.02); }
-        .course-slide { display: none; }
-        .course-slide.show { display: block; animation: smoothFade 0.5s ease; }
+        /* PAGE 1: HOME PAGE SLIDER & FEEDBACK ENGINE */
+        .hero-viewport { position: relative; width: 100%; height: 60vh; background: #0f172a; overflow: hidden; display: flex; justify-content: center; align-items: center; border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); margin-bottom: 60px; }
+        .slider-box { position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; display: flex; transition: transform 0.1s ease-out; }
+        .slide-img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; filter: brightness(0.4) contrast(1.02); }
+        .slide-img.active { opacity: 1; }
+        .hero-text { position: relative; z-index: 10; text-align: center; color: #ffffff; max-width: 800px; padding: 0 20px; }
+        .hero-text h2 { font-size: 3.3rem; font-weight: 400; margin-bottom: 20px; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .hero-text p { font-size: 1.2rem; color: #f1f5f9; line-height: 1.7; font-style: italic; margin-bottom: 35px; }
+        .luxury-btn { display: inline-block; padding: 14px 38px; background: #ffffff; color: #1e1b4b; text-decoration: none; font-family: sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: 1px solid #ffffff; cursor: pointer; transition: all 0.3s; }
+        .luxury-btn:hover { background: transparent; color: #ffffff; }
+
+        /* Dynamic Feedback Ticker Carousel Machine */
+        .feedback-container { max-width: 750px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 40px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.01); border-radius: 2px; }
+        .feedback-item { display: none; }
+        .feedback-item.active-feed { display: block; animation: smoothFade 0.6s ease; }
         @keyframes smoothFade { from { opacity: 0; } to { opacity: 1; } }
-        .c-meta { font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 600; margin-bottom: 15px; display: block; }
-        .c-title { font-size: 1.7rem; color: #1e1b4b; margin-bottom: 15px; font-weight: 400; }
+        .feed-msg { font-size: 1.2rem; font-style: italic; color: #475569; line-height: 1.7; margin-bottom: 20px; }
+        .feed-user { font-family: sans-serif; font-size: 0.85rem; font-weight: 600; color: #1e1b4b; text-transform: uppercase; letter-spacing: 1px; }
+        .feed-course { font-family: sans-serif; font-size: 0.75rem; color: #b45309; margin-top: 3px; }
+
+        /* PAGE 2: ABOUT US & OWNER MESSAGE MODULE */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; max-width: 1100px; margin: 0 auto; align-items: start; }
+        .history-pane p { font-size: 1.1rem; color: #475569; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
+        .owner-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; border-top: 4px solid #1e1b4b; box-shadow: 0 15px 35px rgba(0,0,0,0.02); position: relative; }
+        .quote-icon { font-size: 3rem; color: #e2e8f0; position: absolute; top: 15px; left: 25px; font-family: serif; line-height: 1; }
+        .owner-message { font-size: 1.1rem; font-style: italic; color: #334155; line-height: 1.7; margin-bottom: 25px; position: relative; z-index: 2; }
+        .owner-meta h5 { font-size: 1.1rem; color: #1e1b4b; font-weight: 600; }
+        .owner-meta p { font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; color: #b45309; letter-spacing: 1px; margin-top: 2px; }
+
+        /* PAGE 3: INTERACTIVE COURSES & REGISTRATION MATRIX */
+        .course-slider-wrap { max-width: 800px; margin: 0 auto 60px auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; box-shadow: 0 15px 35px rgba(0,0,0,0.02); }
+        .course-item { display: none; }
+        .course-item.show-course { display: block; animation: smoothFade 0.5s ease; }
+        .c-tag { font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 600; margin-bottom: 12px; display: block; }
+        .c-title { font-size: 1.75rem; color: #1e1b4b; margin-bottom: 15px; font-weight: 400; }
         .c-desc { font-size: 1.05rem; color: #475569; line-height: 1.7; margin-bottom: 20px; }
         .c-time { font-family: sans-serif; font-size: 0.9rem; font-weight: 600; color: #1e1b4b; }
-        .slider-controls { display: flex; justify-content: space-between; margin-top: 35px; border-top: 1px solid #f1f5f9; padding-top: 25px; }
-        .ctrl-btn { background: none; border: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: #1e1b4b; cursor: pointer; transition: color 0.2s; }
-        .ctrl-btn:hover { color: #b45309; }
-
-        /* Elegant Enrollment Application Dashboard Layout */
+        .slide-btns { display: flex; justify-content: space-between; margin-top: 35px; border-top: 1px solid #f1f5f9; padding-top: 25px; }
+        .slide-ctrl { background: none; border: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: #1e1b4b; cursor: pointer; transition: color 0.2s; }
+        .slide-ctrl:hover { color: #b45309; }
+        
+        /* Application Form Frame Container Layout */
         .form-frame { max-width: 650px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; box-shadow: 0 25px 50px rgba(0,0,0,0.02); }
-        .input-group { margin-bottom: 22px; }
-        .input-group label { display: block; font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; margin-bottom: 8px; font-weight: 600; }
-        .input-group input, .input-group select { width: 100%; padding: 14px; background: #fafaf6; border: 1px solid #cbd5e1; font-size: 1rem; color: #1e293b; outline: none; transition: border-color 0.3s; }
-        .input-group input:focus, .input-group select:focus { border-color: #1e1b4b; background: #ffffff; }
+        .input-box { margin-bottom: 22px; }
+        .input-box label { display: block; font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; margin-bottom: 8px; font-weight: 600; }
+        .input-box input, .input-box select { width: 100%; padding: 14px; background: #fafaf6; border: 1px solid #cbd5e1; font-size: 1rem; color: #1e293b; outline: none; transition: border 0.3s; }
+        .input-box input:focus, .input-box select:focus { border-color: #1e1b4b; background: #ffffff; }
         .submit-btn { width: 100%; padding: 16px; background: #1e1b4b; color: #ffffff; border: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.3s; }
         .submit-btn:hover { background: #b45309; }
 
-        /* Contact Details Footer Panels */
-        .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto; }
-        .contact-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 30px; text-align: center; }
-        .contact-card h4 { font-size: 1.15rem; color: #1e1b4b; margin-bottom: 8px; font-weight: 500; }
-        .contact-card p { font-family: sans-serif; font-size: 0.95rem; color: #475569; line-height: 1.6; }
-        footer { padding: 40px 20px; text-align: center; background: #1e1b4b; color: #94a3b8; font-family: sans-serif; font-size: 0.8rem; letter-spacing: 1px; }
+        /* PAGE 4: CONTACT PANELS & INTERACTIVE RESPONSIVE MAP */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px; margin: 0 auto; }
+        .contact-box { background: #ffffff; border: 1px solid #e2e8f0; padding: 35px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px; }
+        .contact-box h4 { font-size: 1.2rem; color: #1e1b4b; margin-bottom: 10px; font-weight: 500; }
+        .contact-box p { font-family: sans-serif; font-size: 0.95rem; color: #475569; line-height: 1.6; }
+        .social-div { display: flex; justify-content: center; gap: 25px; font-family: sans-serif; font-size: 0.9rem; margin-top: 20px; }
+        .social-div a { color: #1e1b4b; text-decoration: none; font-weight: bold; transition: color 0.2s; }
+        .social-div a:hover { color: #b45309; }
 
-        /* Responsive Layout Overrides */
+        /* Global Structural Footer */
+        footer { margin-top: auto; padding: 40px 20px; text-align: center; background: #1e1b4b; color: #94a3b8; font-family: sans-serif; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* Responsive Layout Media Optimizations */
         @media(max-width: 768px) {
             nav { padding: 15px 20px; flex-direction: column; gap: 15px; }
             .nav-links { gap: 20px; }
-            .hero-viewport { margin-top: 140px; height: 60vh; }
-            .hero-content h2 { font-size: 2.2rem; }
-            .about-grid, .contact-row { grid-template-columns: 1fr; gap: 30px; }
-            section { padding: 60px 20px; }
+            .page-view { padding-top: 190px; padding-left: 20px; padding-right: 20px; }
+            .hero-text h2 { font-size: 2.1rem; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+            .course-slider-wrap, .form-frame { padding: 25px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Floating Top Menu Header Navigation -->
+    <!-- 3D Environment Canvas Background Layer Component -->
+    <div id="canvas-3d"></div>
+
+    <!-- Premium Fixed Top Multi-Page Header Navigation -->
     <nav>
-        <div class="logo-container">
-            <!-- ⬇️ CONFIGURATION: Replace 'logo.png' with your logo file name uploaded to GitHub -->
-            <img src="logo.png" alt="Institute Logo" class="logo-image" onerror="this.style.display='none'">
+        <div class="logo-group">
+            <img src="image_ef7d0f40.png" alt="Lorig Jungney Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">
-                <h1>Drugyel Institute</h1>
-                <p>EST. 2025 • PARO, BHUTAN</p>
+                <h1>Lorig Jungney</h1>
+                <p>TRAINING INSTITUTE • PARO, BHUTAN</p>
             </div>
         </div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#courses">Courses</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><button id="btn-home" class="active-nav" onclick="navigatePage('home')">Home</button></li>
+            <li><button id="btn-about" onclick="navigatePage('about')">About</button></li>
+            <li><button id="btn-courses" onclick="navigatePage('courses')">Courses</button></li>
+            <li><button id="btn-contact" onclick="navigatePage('contact')">Contact</button></li>
         </ul>
     </nav>
 
-    <!-- Parallax 3D Workspace Hero Slider Frame -->
-    <div class="hero-viewport" id="hero-area">
-        <div class="photo-slide-container" id="parallax-layer">
-            <!-- ⬇️ CONFIGURATION: Replace 'photo1.jpg', 'photo2.jpg', 'photo3.jpg' with your photo filenames -->
-            <img src="photo1.jpg" alt="Campus View 1" class="img-layer active">
-            <img src="photo2.jpg" alt="Campus View 2" class="img-layer">
-            <img src="photo3.jpg" alt="Campus View 3" class="img-layer">
+    <!-- PAGE STAGE 01: HOME VIEWPORTS (Hero Banner Slides & Continuous Feedback Engine) -->
+    <main id="view-home" class="page-view active-page">
+        <div class="hero-viewport" id="hero-frame">
+            <div class="slider-box" id="parallax-mesh">
+                <img src="photo1.jpg" alt="Lorig Jungney Campus 1" class="slide-img active">
+                <img src="photo2.jpg" alt="Lorig Jungney Campus 2" class="slide-img">
+                <img src="photo3.jpg" alt="Lorig Jungney Campus 3" class="slide-img">
+            </div>
+            <div class="hero-text">
+                <h2>Empowering Minds in Drugyel</h2>
+                <p>Professional information technology applications, advanced enterprise accountancy suites, and complete academic curriculum development courses.</p>
+                <button class="luxury-btn" onclick="navigatePage('courses', true)">Reserve Admission</button>
+            </div>
         </div>
-        <div class="hero-content">
-            <h2>Empowering Minds in Drugyel</h2>
-            <p>Advanced digital processing applications, professional accounting bookkeeping models, and comprehensive academic scholastic development systems.</p>
-            <a href="#register" class="btn-luxury">Enroll Online Now</a>
-        </div>
-    </div>
 
-    <!-- About Section Content -->
-    <section id="about">
-        <h3 class="section-title">About The Institution</h3>
-        <p class="section-subtitle">Academic Legacy & Location</p>
+        <h3 class="sec-title" style="margin-top: 40px;">Student Testimonials</h3>
+        <p class="sec-subtitle">Feedback From Our Graduates</p>
+        <div class="feedback-container">
+            <div class="feedback-item active-feed">
+                <p class="feed-msg">"The TallyPrime Advance course structure was incredibly practical. The continuous hands-on labs helped me land an accounting placement in Paro right after graduation."</p>
+                <div class="feed-user">Dorji Wangchuk</div>
+                <div class="feed-course">Alumni — TallyPrime Advance Suite</div>
+            </div>
+            <div class="feedback-item">
+                <p class="feed-msg">"The instructors explain complex concepts very clearly. The academic tuitions helped me gain conceptual depth and significantly improved my exam results."</p>
+                <div class="feed-user">Pema Lhamo</div>
+                <div class="feed-course">Student — Academic Scholastic Tuition</div>
+            </div>
+            <div class="feedback-item">
+                <p class="feed-msg">"The Digital Literacy Training program provided exactly what I needed to manage workplace files, spreadsheets, and online security configuration tools securely."</p>
+                <div class="feed-user">Sonam Tobgay</div>
+                <div class="feed-course">Graduate — Digital Literacy Framework</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PAGE STAGE 02: ABOUT PANE (Institutional History & Interactive Owner's Message Panel) -->
+    <section id="view-about" class="page-view">
+        <h3 class="sec-title">About Our Institution</h3>
+        <p class="sec-subtitle">Academic Legacy & Location</p>
+        
         <div class="about-grid">
-            <div class="about-text">
-                <p>Located in the scenic landscape of Drugyel, Paro, our institution serves as a center for technical training and academic growth. Founded last year, we bridge the gap between traditional learning and modern technological skills.</p>
+            <div class="history-pane">
+                <p>Located in the scenic landscape of Drugyel, Paro, Lorig Jungney Training Institute serves as a trusted center for technical training and academic growth. Founded last year, we bridge the gap between traditional learning and modern technological skills.</p>
                 <p>We provide students with rigorous training programs designed to prepare them directly for corporate operations, technology management, and higher academic success.</p>
             </div>
-            <div class="about-badge">
-                <h4 class="badge-title">Drugyel, Paro</h4>
-                <p class="badge-desc">Kingdom of Bhutan</p>
+            
+            <div class="owner-card">
+                <div class="quote-icon">“</div>
+                <p class="owner-message">Kuzuzangpo La. At Lorig Jungney, our vision is to empower youth and professionals with practical tech skills and deep conceptual knowledge. We look forward to supporting you on your educational journey here in Paro.</p>
+                <div class="owner-meta">
+                    <h5>Proprietor / Director</h5>
+                    <p>Lorig Jungney Management Board</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 02: Academic Suite Slider Presentation Module -->
-    <section id="courses">
-        <h3 class="section-title">Academic & Training Programs</h3>
-        <p class="section-subtitle">Explore Our Available Courses</p>
+    <!-- PAGE STAGE 03: ACADEMIC CURRICULUM (Course Program Details & Enrollment Registration Systems) -->
+    <section id="view-courses" class="page-view">
+        <h3 class="sec-title">Academic Curriculum</h3>
+        <p class="sec-subtitle">Explore Our Available Courses</p>
         
-        <div class="course-slider-box">
-            <!-- Slide 01: Professional Accountancy -->
-            <div class="course-slide show">
-                <span class="c-meta">Module 01 / Financial Architecture</span>
+        <div class="course-slider-wrap">
+            <div class="course-item show-course">
+                <span class="c-tag">Module 01 / Accounting Architecture</span>
                 <h4 class="c-title">TallyPrime Advance Suite</h4>
-                <p class="c-desc">Master advanced enterprise bookkeeping systems, complex commercial inventory matrices, multi-tier taxation rules, and internal balance sheet reconciliation setups.</p>
-                <div class="c-time">⏳ Standard Duration: 6 Months</div>
+                <p class="c-desc">Master advanced accounting workflows, corporate inventory tracking matrices, commercial taxation modules, and structural balance sheet reconciliation.</p>
+                <div class="c-time">⏳ Program Duration: 6 Months</div>
             </div>
-            <!-- Slide 02: Institutional Compliance -->
-            <div class="course-slide">
-                <span class="c-meta">Module 02 / Corporate Reconciliation</span>
+            <div class="course-item">
+                <span class="c-tag">Module 02 / Corporate Verification</span>
                 <h4 class="c-title">Auditing of Books of Accounts</h4>
-                <p class="c-desc">Designed for modern commercial tracking. Covers practical physical verification frameworks, financial fraud detection systems, and regulatory auditing models.</p>
-                <div class="c-time">⏳ Professional Duration: 1 Month</div>
+                <p class="c-desc">Practical balancing models covering enterprise accounting verifications, standard auditing checks, balance reconciliations, and asset validation systems.</p>
+                <div class="c-time">⏳ Program Duration: 1 Month</div>
             </div>
-            <!-- Slide 03: Fundamentals -->
-            <div class="course-slide">
-                <span class="c-meta">Module 03 / Core Competency</span>
-                <h4 class="c-title">Digital Literacy & Systems</h4>
-                <p class="c-desc">Build a strong corporate computer baseline. Covers global cloud file management operations, internet security safety protocols, and key office processing apps.</p>
-                <div class="c-time">⏳ Essential Duration: 1 Month</div>
+            <div class="course-item">
+                <span class="c-tag">Module 03 / Core Competencies</span>
+                <h4 class="c-title">Digital Literacy Training</h4>
+                <p class="c-desc">Build a strong technical baseline. Covers secure workplace folder setups, cloud utility tools, internet privacy settings, and modern productivity apps.</p>
+                <div class="c-time">⏳ Program Duration: 1 Month</div>
             </div>
-            <!-- Slide 04: Advanced Operations -->
-            <div class="course-slide">
-                <span class="c-meta">Module 04 / General Computing</span>
+            <div class="course-item">
+                <span class="c-tag">Module 04 / Computing Core</span>
                 <h4 class="c-title">Advance Computer Application</h4>
-                <p class="c-desc">Master productivity computing. Covers design template automation techniques, relational database tracking layouts, and sheet parsing tools.</p>
-                <div class="c-time">⏳ Intermediate Duration: 3 Months</div>
+                <p class="c-desc">Explore deep computing. Features database design templates, sheet tracking functions, data analysis layouts, and workplace file automations.</p>
+                <div class="c-time">⏳ Program Duration: 3 Months</div>
             </div>
-            <!-- Slide 05: Scholastic Assistance -->
-            <div class="course-slide">
-                <span class="c-meta">Module 05 / Scholastic Excellence</span>
+            <div class="course-item">
+                <span class="c-tag">Module 05 / Scholastic Assistance</span>
                 <h4 class="c-title">Comprehensive Academic Tuition</h4>
                 <p class="c-desc">Targeted individual subject tracking modules supporting school level course curricula. Focuses on building conceptual clarity and exam confidence.</p>
-                <div class="c-time">⏳ Flexible / Ongoing Support</div>
+                <div class="c-time">⏳ Flexible / Ongoing Academic Support</div>
             </div>
 
-            <!-- Slider Control Mechanisms -->
-            <div class="slider-controls">
-                <button class="ctrl-btn" onclick="shiftCourse(-1)">◀ Previous Program</button>
-                <button class="ctrl-btn" onclick="shiftCourse(1)">Next Program ▶</button>
+            <div class="slide-btns">
+                <button class="slide-ctrl" onclick="rotateCourse(-1)">◀ Previous Program</button>
+                <button class="slide-ctrl" onclick="rotateCourse(1)">Next Program ▶</button>
             </div>
         </div>
-    </section>
 
-    <!-- Section 03: Student Application Registration Interface -->
-    <section id="register">
-        <h3 class="section-title">Enrollment Matrix</h3>
-        <p class="section-subtitle">Secure Your Educational Placement</p>
-        
-        <div class="form-frame">
-            <!-- Formspree Static Pipeline Configuration Endpoint Handler -->
+        <div class="form-frame" id="form-scroll-destination">
+            <h4 style="font-size: 1.5rem; text-align: center; color: #1e1b4b; margin-bottom: 30px; font-weight: 400;">Course Registration Portal</h4>
             <form action="https://formspree.io" method="POST">
-                <div class="input-group">
-                    <label>Full Legal Name</label>
-                    <input type="text" name="name" placeholder="e.g., Sonam Tobgay" required>
+                <div class="input-box">
+                    <label>Full Name</label>
+                    <input type="text" name="student_name" placeholder="e.g., Tshering Dorji" required>
                 </div>
-                <div class="input-group">
-                    <label>Active Contact Phone Number</label>
-                    <input type="tel" name="phone" placeholder="e.g., +975 17xxxxxx" required>
+                <div class="input-box">
+                    <label>Contact Phone Number</label>
+                    <input type="tel" name="student_phone" placeholder="e.g., +975 17xxxxxx" required>
                 </div>
-                <div class="input-group">
-                    <label>Selected Field Program Studio</label>
-                    <select name="course" required>
+                <div class="input-box">
+                    <label>Select Your Intended Course</label>
+                    <select name="selected_course" required>
                         <option value="TallyPrime Advance">TallyPrime Advance Suite (6 Months)</option>
                         <option value="Auditing Books">Auditing of Books of Accounts (1 Month)</option>
-                        <option value="Digital Literacy">Digital Literacy Framework (1 Month)</option>
+                        <option value="Digital Literacy">Digital Literacy Training (1 Month)</option>
                         <option value="TallyPrime Basic">TallyPrime Basic Essentials (3 Months)</option>
                         <option value="Basic Computer">Basic Computer Applications (2 Months)</option>
-                        <option value="Advance Computer">Advance Computer Operations (3 Months)</option>
+                        <option value="Advance Computer">Advance Computer Applications (3 Months)</option>
                         <option value="Academic Tuition">All-Subject Scholastic Academic Tuition</option>
                         <option value="Short Term AI">Short Term: AI Productivity Tools (2 Weeks)</option>
-                        <option value="Short Term Web">Short Term: Web Design Basics (1 Month)</option>
+                        <option value="Short Term Web">Short Term: Web Design Framework (1 Month)</option>
                     </select>
                 </div>
-                <button type="submit" class="submit-btn">Submit Registration Application</button>
+                <button type="submit" class="submit-btn">Submit Enrollment Form</button>
             </form>
         </div>
     </section>
 
-    <!-- Section 04: Location & Social Media Concierge -->
-    <section id="contact">
-        <h3 class="section-title">Institutional Concierge</h3>
-        <p class="section-subtitle">Visit Us or Connect Directly</p>
+    <!-- PAGE STAGE 04: CONTACT PANELS & INTERACTIVE RESPONSIVE MAP -->
+    <section id="view-contact" class="page-view">
+        <h3 class="sec-title">Contact & Concierge</h3>
+        <p class="sec-subtitle">Connect with Our Office Directly</p>
         
-        <div class="contact-row">
-            <div class="contact-card">
+        <div class="contact-grid">
+            <div class="contact-box">
                 <h4>Campus Location</h4>
                 <p style="margin-bottom: 15px;">Drugyel, Paro Province<br>Kingdom of Bhutan</p>
-                <!-- Embedded Responsive Google Map for Paro Drugyel Area -->
-                <iframe src="https://google.com" width="100%" height="200" style="border:0; margin-top:15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <!-- Embedded Responsive Google Map pointing near Paro Drugyel area -->
+                <iframe src="https://google.com" width="100%" height="180" style="border:0; border-radius: 2px;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-            <div class="contact-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="contact-box">
                 <div>
                     <h4>Hours of Operation</h4>
-                    <p style="margin-bottom: 25px;">Monday – Saturday<br>9:00 AM – 5:00 PM BST</p>
+                    <p>Monday – Saturday<br>9:00 AM – 5:00 PM BST</p>
                 </div>
                 <div>
-                    <h4>Digital Networks</h4>
-                    <!-- Styled Text Links for Social Media Channels -->
-                    <div style="display: flex; justify-content: center; gap: 20px; font-family: sans-serif; font-size: 0.9rem; margin-top: 15px;">
-                        <a href="https://facebook.com" target="_blank" style="color: #1e1b4b; text-decoration: none; font-weight: bold;">Facebook</a>
-                        <a href="https://instagram.com" target="_blank" style="color: #1e1b4b; text-decoration: none; font-weight: bold;">Instagram</a>
-                        <a href="mailto:info@drugyelinstitute.edu.bt" style="color: #1e1b4b; text-decoration: none; font-weight: bold;">Email</a>
+                    <h4>Digital Media Networks</h4>
+                    <div class="social-div">
+                        <a href="https://facebook.com" target="_blank">Facebook</a>
+                        <a href="https://instagram.com" target="_blank">Instagram</a>
+                        <a href="mailto:info@lorigjungney.edu.bt">Email Office</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Institutional Footer Standard -->
+    <!-- Global Layout Base Structural Footer -->
     <footer>
-        © 2026 Drugyel Training Institute. Paro, Bhutan. All Rights Reserved.
+        © 2026 Lorig Jungney Training Institute. Paro, Bhutan. All Rights Reserved.
     </footer>
 
     <!-- Behavioral Processing Engines Scripts -->
     <script>
-        // 1. Text & Layout Course Switcher Engine Configuration
-        let selectedIdx = 0;
-        const items = document.querySelectorAll('.course-slide');
-        function shiftCourse(dir) {
-            items[selectedIdx].classList.remove('show');
-            selectedIdx = (selectedIdx + dir + items.length) % items.length;
-            items[selectedIdx].classList.add('show');
+        // 1. Single Page Application Routing Engine
+        function navigatePage(pageId, focusForm = false) {
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active-page'));
+            document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active-nav'));
+            
+            document.getElementById('view-' + pageId).classList.add('active-page');
+            const navigationButton = document.getElementById('btn-' + pageId);
+            if (navigationButton) navigationButton.classList.add('active-nav');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (focusForm) {
+                setTimeout(() => {
+                    document.getElementById('form-scroll-destination').scrollIntoView({ behavior: 'smooth' });
+                }, 400);
+            }
         }
 
-        // 2. Automated Background Hero Image Slideshow Loop
-        let imageIdx = 0;
-        const images = document.querySelectorAll('.img-layer');
+        // 2. Automated Testimonial Feedback Machine Loop Engine
+        let activeFeedIdx = 0;
+        const feedbackEntries = document.querySelectorAll('.feedback-item');
         setInterval(() => {
-            if(images.length > 1) {
-                images[imageIdx].classList.remove('active');
-                imageIdx = (imageIdx + 1) % images.length;
-                images[imageIdx].classList.add('active');
+            if(feedbackEntries.length > 1) {
+                feedbackEntries[activeFeedIdx].classList.remove('active-feed');
+                activeFeedIdx = (activeFeedIdx + 1) % feedbackEntries.length;
+                feedbackEntries[activeFeedIdx].classList.add('active-feed');
             }
-        }, 5000); // Changes image layer viewport every 5 seconds
+        }, 6000);
 
-        // 3. 3D Interactive Parallax Layer Effect Script
-        const container = document.getElementById('hero-area');
-        const visualLayer = document.getElementById('parallax-layer');
-        
-        container.addEventListener('mousemove', (e) => {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            const moveX = (e.clientX - width / 2) / (width / 2);
-            const moveY = (e.clientY - height / 2) / (height / 2);
-            
-            // Map calculated coordinates onto subtle CSS visual displacements
-            visualLayer.style.transform = `translateX(${moveX * -25}px) translateY(${moveY * -25}px) scale(1.05)`;
+        // 3. Course Layout Gallery Manual Slider Selector Mechanism
+        let currentCourseIdx = 0;
+        const structuralCourseSlides = document.querySelectorAll('.course-item');
+        function rotateCourse(direction) {
+            structuralCourseSlides[currentCourseIdx].classList.remove('show-course');
+            currentCourseIdx = (currentCourseIdx + direction + structuralCourseSlides.length) % structuralCourseSlides.length;
+            structuralCourseSlides[currentCourseIdx].classList.add('show-course');
+        }
+
+        // 4. Automated Homepage Hero Background Picture Carousel Loop
+        let activeHeroIdx = 0;
+        const targetHeroImages = document.querySelectorAll('.slide-img');
+        setInterval(() => {
+            if(targetHeroImages.length > 1) {
+                targetHeroImages[activeHeroIdx].classList.remove('active');
+                activeHeroIdx = (activeHeroIdx + 1) % targetHeroImages.length;
+                targetHeroImages[activeHeroIdx].classList.add('active');
+            }
+        }, 5000);
+
+        // 5. Parallax Displacement Layout Cursor Tracker Engine
+        const frameEl = document.getElementById('hero-frame');
+        const overlayMesh = document.getElementById('parallax-mesh');
+        frameEl.addEventListener('mousemove', (e) => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const horizontalVal = (e.clientX - w / 2) / (w / 2);
+            const verticalVal = (e.clientY - h / 2) / (h / 2);
+            overlayMesh.style.transform = `translateX(${horizontalVal * -22}px) translateY(${verticalVal * -22}px) scale(1.04)`;
+        });
+        frameEl.addEventListener('mouseleave', () => {
+            overlayMesh.style.transform = 'translateX(0px) translateY(0px) scale(1)';
         });
 
-        // Clear canvas transformations seamlessly when focus leaves section
-        container.addEventListener('mouseleave', () => {
-            visualLayer.style.transform = 'translateX(0px) translateY(0px) scale(1)';
+        // 6. Three.js Ambient 3D Dynamic WebGL Geometry Matrix Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-3d').appendChild(renderer.domElement);
+
+        const frameworkGeometry = new THREE.IcosahedronGeometry(2.3, 1);
+        const structureMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x1e1b4b, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.04 
+        });
+        const dynamicMesh = new THREE.Mesh(frameworkGeometry, structureMaterial);
+        scene.add(dynamicMesh);
+        camera.position.z = 5;
+
+        function renderLoop3D() {
+            requestAnimationFrame(renderLoop3D);
+            dynamicMesh.rotation.x += 0.0008;
+            dynamicMesh.rotation.y += 0.0012;
+            renderer.render(scene, camera);
+        }
+        renderLoop3D();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
 </html>
-
