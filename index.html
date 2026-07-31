@@ -131,7 +131,7 @@
         </ul>
     </nav>
 
-    <!-- PAGE STAGE 01: HOME VIEWPORTS (Hero Banner Slides & Continuous Feedback Engine) -->
+        <!-- PAGE STAGE 01: HOME VIEWPORTS (Hero Banner Slides & Continuous Feedback Engine) -->
     <main id="view-home" class="page-view active-page">
         <div class="hero-viewport" id="hero-frame">
             <div class="slider-box" id="parallax-mesh">
@@ -148,7 +148,10 @@
 
         <h3 class="sec-title" style="margin-top: 40px;">Student Testimonials</h3>
         <p class="sec-subtitle">Feedback From Our Graduates</p>
-        <div class="feedback-container">
+        
+        <!-- Live Automated Testimonial Feedback Ticker Window -->
+        <div class="feedback-container" id="feedback-carousel-box">
+            <!-- Default starting reviews (Will be automatically merged with user-written feedback) -->
             <div class="feedback-item active-feed">
                 <p class="feed-msg">"The TallyPrime Advance course structure was incredibly practical. The continuous hands-on labs helped me land an accounting placement in Paro right after graduation."</p>
                 <div class="feed-user">Dorji Wangchuk</div>
@@ -159,13 +162,31 @@
                 <div class="feed-user">Pema Lhamo</div>
                 <div class="feed-course">Student — Academic Scholastic Tuition</div>
             </div>
-            <div class="feedback-item">
-                <p class="feed-msg">"The Digital Literacy Training program provided exactly what I needed to manage workplace files, spreadsheets, and online security configuration tools securely."</p>
-                <div class="feed-user">Sonam Tobgay</div>
-                <div class="feed-course">Graduate — Digital Literacy Framework</div>
-            </div>
+        </div>
+
+        <!-- NEW GUI MODULE: Submit New Student Feedback Directly -->
+        <div class="form-frame" style="margin-top: 40px; max-width: 750px; border-style: dashed; background: #fafafa;">
+            <h4 style="font-size: 1.3rem; text-align: center; color: #1e1b4b; margin-bottom: 20px; font-weight: 500;">Share Your Institutional Experience</h4>
+            <form id="student-feedback-form" onsubmit="captureStudentFeedback(event)">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+                    <div class="input-box" style="margin-bottom: 0;">
+                        <label>Your Name</label>
+                        <input type="text" id="feed-input-name" placeholder="e.g., Karma Tenzin" required>
+                    </div>
+                    <div class="input-box" style="margin-bottom: 0;">
+                        <label>Course / Program Completed</label>
+                        <input type="text" id="feed-input-course" placeholder="e.g., TallyPrime Basic" required>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label>Your Review / Testimonial Message</label>
+                    <input type="text" id="feed-input-msg" placeholder="Write your review here..." required>
+                </div>
+                <button type="submit" class="submit-btn" style="padding: 12px; background: #b45309;">Publish Live Feedback</button>
+            </form>
         </div>
     </main>
+
 
     <!-- PAGE STAGE 02: ABOUT PANE (Institutional History & Interactive Owner's Message Panel) -->
     <section id="view-about" class="page-view">
@@ -316,16 +337,103 @@
             }
         }
 
-        // 2. Automated Testimonial Feedback Machine Loop Engine
+               // 2. Global Testimonial Array Dataset Engine
         let activeFeedIdx = 0;
-        const feedbackEntries = document.querySelectorAll('.feedback-item');
-        setInterval(() => {
-            if(feedbackEntries.length > 1) {
-                feedbackEntries[activeFeedIdx].classList.remove('active-feed');
-                activeFeedIdx = (activeFeedIdx + 1) % feedbackEntries.length;
-                feedbackEntries[activeFeedIdx].classList.add('active-feed');
-            }
-        }, 6000);
+        let feedbackIntervalTimer = null;
+
+        // Base memory array configuration loading pre-written or saved feedback items
+        let studentFeedbackDatabase = JSON.parse(localStorage.getItem('lorig_reviews')) || [];
+
+        // GUI Function to register custom feedback items submitted by users on the home screen
+        function captureStudentFeedback(event) {
+            event.preventDefault();
+            
+            const clientName = document.getElementById('feed-input-name').value;
+            const chosenCourse = document.getElementById('feed-input-course').value;
+            const textMessage = document.getElementById('feed-input-msg').value;
+
+            // Generate layout tracking object payload
+            const newFeedbackObject = {
+                name: clientName,
+                course: chosenCourse,
+                message: textMessage
+            };
+
+            // Push payload data into system array registry and back to browser cache
+            studentFeedbackDatabase.push(newFeedbackObject);
+            localStorage.setItem('lorig_reviews', JSON.stringify(studentFeedbackDatabase));
+
+            // Clear visual inputs cleanly
+            document.getElementById('student-feedback-form').reset();
+            
+            // Re-render and cycle ticker directly
+            buildFeedbackCarousel();
+            alert("Thank you! Your feedback has been published onto the home carousel successfully.");
+        }
+
+        // Structural compilation script mapping database arrays onto interactive visual slide cards
+        function buildFeedbackCarousel() {
+            // Locate target DOM node container area
+            const containerBox = document.getElementById('feedback-carousel-box');
+            
+            // Default base content blocks
+            let internalCarouselHTML = `
+                <div class="feedback-item active-feed">
+                    <p class="feed-msg">"The TallyPrime Advance course structure was incredibly practical. The continuous hands-on labs helped me land an accounting placement in Paro right after graduation."</p>
+                    <div class="feed-user">Dorji Wangchuk</div>
+                    <div class="feed-course">Alumni — TallyPrime Advance Suite</div>
+                </div>
+                <div class="feedback-item">
+                    <p class="feed-msg">"The instructors explain complex concepts very clearly. The academic tuitions helped me gain conceptual depth and significantly improved my exam results."</p>
+                    <div class="feed-user">Pema Lhamo</div>
+                    <div class="feed-course">Student — Academic Scholastic Tuition</div>
+                </div>
+                <div class="feedback-item">
+                    <p class="feed-msg">"The Digital Literacy Training program provided exactly what I needed to manage workplace files, spreadsheets, and online security configuration tools securely."</p>
+                    <div class="feed-user">Sonam Tobgay</div>
+                    <div class="feed-course">Graduate — Digital Literacy Framework</div>
+                </div>
+            `;
+
+            // Append custom student responses compiled out of localStorage database layers
+            studentFeedbackDatabase.forEach(item => {
+                internalCarouselHTML += `
+                    <div class="feedback-item">
+                        <p class="feed-msg">"${item.message}"</p>
+                        <div class="feed-user">${item.name}</div>
+                        <div class="feed-course">Student — ${item.course}</div>
+                    </div>
+                `;
+            });
+
+            // Write into container element safely
+            containerBox.innerHTML = internalCarouselHTML;
+            
+            // Reset active frame pointer indexes and initialize the interval rotation loop
+            activeFeedIdx = 0;
+            initializeFeedbackRotationLoop();
+        }
+
+        // Automated rotational animation sequence scheduling machine
+        function initializeFeedbackRotationLoop() {
+            // Clear current working intervals if they exist to prevent memory leaks
+            if(feedbackIntervalTimer) clearInterval(feedbackIntervalTimer);
+            
+            feedbackIntervalTimer = setInterval(() => {
+                const elementsList = document.querySelectorAll('.feedback-item');
+                if(elementsList.length > 1) {
+                    elementsList[activeFeedIdx].classList.remove('active-feed');
+                    activeFeedIdx = (activeFeedIdx + 1) % elementsList.length;
+                    elementsList[activeFeedIdx].classList.add('active-feed');
+                }
+            }, 6000); // Cycles slideshow views smoothly onto new cards every 6 seconds
+        }
+
+        // Initialize carousel display states upon program launching execution
+        window.addEventListener('DOMContentLoaded', () => {
+            buildFeedbackCarousel();
+        });
+
 
         // 3. Course Layout Gallery Manual Slider Selector Mechanism
         let currentCourseIdx = 0;
