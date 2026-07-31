@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drugyel Training Institute | Paro, Bhutan</title>
+    <!-- Tailwind CSS for sleek modern styling -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Three.js for 3D graphics rendering -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        #canvas-3d { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; }
+        .slide { display: none; }
+        .slide.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans overflow-x-hidden">
+
+    <!-- 3D Background Container -->
+    <div id="canvas-3d"></div>
+
+    <!-- Navigation Header -->
+    <nav class="p-6 flex justify-between items-center bg-slate-900/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-slate-800">
+        <h1 class="text-2xl font-bold tracking-wider text-teal-400">DRUGYEL INSTITUTE</h1>
+        <p class="text-sm text-slate-400">Est. 2025 | Paro, Bhutan</p>
+    </nav>
+
+    <!-- Hero Section with 3D Interaction overlay -->
+    <header class="h-100vh min-h-[80vh] flex flex-col justify-center items-center text-center px-4 pt-20">
+        <h2 class="text-5xl md:text-6xl font-black mb-4 drop-shadow-lg text-white">Empowering Minds in Drugyel</h2>
+        <p class="text-lg md:text-xl text-teal-300 max-w-xl mb-8 font-medium">Advanced computer literacy, professional accounting modules, and comprehensive academic support.</p>
+        <a href="#register" class="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold px-8 py-3 rounded-full transition duration-300 shadow-lg shadow-teal-500/20">Enroll Online Now</a>
+    </header>
+
+    <!-- Interactive Course Showcase Slider Section -->
+    <section class="py-16 bg-slate-850 px-4 max-w-4xl mx-auto">
+        <h3 class="text-3xl font-bold text-center mb-8 border-b-2 border-teal-500 pb-2 inline-block mx-auto w-full">Featured Training Programs</h3>
+        <div id="slider-container" class="relative bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+            <!-- Slide 1 -->
+            <div class="slide active">
+                <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Accounting Specialist</span>
+                <h4 class="text-2xl font-bold mt-2">TallyPrime Advance Suite</h4>
+                <p class="text-slate-400 mt-2">Master advanced accounting systems, inventory management, taxation tracking, and financial analysis protocols.</p>
+                <p class="text-teal-400 font-bold mt-4">⏳ Duration: 6 Months</p>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide">
+                <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Corporate Ready</span>
+                <h4 class="text-2xl font-bold mt-2">Auditing of Books of Accounts</h4>
+                <p class="text-slate-400 mt-2">Practical verification frameworks, auditing checklists, balance sheet reconciliation, and statutory standard tracking.</p>
+                <p class="text-purple-400 font-bold mt-4">⏳ Duration: 1 Month</p>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide">
+                <span class="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Academic Support</span>
+                <h4 class="text-2xl font-bold mt-2">Comprehensive Subject Tuition</h4>
+                <p class="text-slate-400 mt-2">Targeted academic guidance for school level curriculum subjects designed to build conceptual depth and exam confidence.</p>
+                <p class="text-amber-400 font-bold mt-4">⏳ Duration: Flexible / Ongoing</p>
+            </div>
+            <!-- Slider Controls -->
+            <div class="flex justify-between mt-8">
+                <button onclick="moveSlide(-1)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm">◀ Previous</button>
+                <button onclick="moveSlide(1)" class="bg-teal-600 hover:bg-teal-500 px-4 py-2 rounded-lg text-sm">Next ▶</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Student Registration Form System (Connected to Formspree) -->
+    <section id="register" class="py-16 bg-slate-900 px-4 max-w-xl mx-auto">
+        <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+            <h3 class="text-2xl font-bold mb-6 text-center text-teal-400">Student Course Registration</h3>
+            
+            <!-- Replace "YOUR_FORMSPREE_ID" with your actual Formspree endpoint ID later -->
+            <form action="https://formspree.io" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Full Name</label>
+                    <input type="text" name="name" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Contact Phone Number</label>
+                    <input type="tel" name="phone" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Select Program Course</label>
+                    <select name="course" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
+                        <option value="Digital Literacy">Digital Literacy Training (1 Month)</option>
+                        <option value="TallyPrime Basic">TallyPrime Basic (3 Months)</option>
+                        <option value="TallyPrime Advance">TallyPrime Advance (6 Months)</option>
+                        <option value="Auditing of Books">Auditing of Books of Accounts (1 Month)</option>
+                        <option value="Basic Computer">Basic Computer Application (2 Months)</option>
+                        <option value="Advance Computer">Advance Computer Application (3 Months)</option>
+                        <option value="Tuition">All Subject Academic Tuition</option>
+                        <option value="AI Productivity">Short Term: AI Productivity Tools (2 Weeks)</option>
+                        <option value="Web Design">Short Term: Web Design HTML/CSS (1 Month)</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold p-3 rounded-lg transition duration-200 mt-4">Submit Application</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer with Institutional Meta -->
+    <footer class="py-8 text-center border-t border-slate-800 text-slate-500 text-sm">
+        © 2026 Drugyel Training Institute. Paro, Bhutan. All Rights Reserved.
+    </footer>
+
+    <!-- Frontend Core Scripts Code -->
+    <script>
+        // 1. Core Simple Text Slider Engine Implementation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        function moveSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // 2. Three.js 3D Animated Geometry Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-3d').appendChild(renderer.domElement);
+
+        // Populate space with floating 3D mathematical geometry
+        const geometry = new THREE.IcosahedronGeometry(2, 0);
+        const material = new THREE.MeshBasicMaterial({ color: 0x14b8a6, wireframe: true, transparent: true, opacity: 0.15 });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        camera.position.z = 5;
+
+        // Visual animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            mesh.rotation.x += 0.002;
+            mesh.rotation.y += 0.003;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Responsive window scaling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
