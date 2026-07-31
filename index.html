@@ -4,146 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drugyel Training Institute | Paro, Bhutan</title>
-    <!-- Tailwind CSS for sleek modern styling -->
-    <script src="https://tailwindcss.com"></script>
-    <!-- Three.js for 3D graphics rendering -->
-    <script src="https://cloudflare.com"></script>
+    <!-- Stylesheets embedded directly to prevent raw text loading bugs on GitHub -->
     <style>
-        #canvas-3d { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; }
-        .slide { display: none; }
-        .slide.active { display: block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
+        body { background-color: #fbfbf8; color: #1e293b; overflow-x: hidden; }
+        
+        /* Premium Navigation Bar with Custom Logo support */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(251, 251, 248, 0.96); backdrop-filter: blur(8px); border-b: 1px solid #e2e8f0; position: fixed; top: 0; width: 100%; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-image { height: 55px; width: auto; object-fit: contain; display: block; border-radius: 4px; }
+        .logo-text h1 { font-size: 1.4rem; letter-spacing: 1px; color: #1e1b4b; font-weight: 700; text-transform: uppercase; }
+        .logo-text p { font-size: 0.7rem; color: #64748b; font-family: sans-serif; letter-spacing: 1px; margin-top: 1px; }
+        .nav-links { display: flex; list-style: none; gap: 35px; }
+        .nav-links a { text-decoration: none; color: #334155; font-size: 0.9rem; font-weight: 600; font-family: sans-serif; letter-spacing: 1px; transition: color 0.3s; }
+        .nav-links a:hover { color: #b45309; }
+
+        /* Integrated 3D Interactive Hero Canvas Slide Engine */
+        .hero-viewport { position: relative; width: 100vw; height: 80vh; background: #0f172a; margin-top: 96px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .photo-slide-container { position: absolute; width: 110%; height: 110%; top: -5%; left: -5%; display: flex; transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1); }
+        .img-layer { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; filter: brightness(0.45) contrast(1.05); }
+        .img-layer.active { opacity: 1; }
+        .hero-content { position: relative; z-index: 10; text-align: center; color: #ffffff; max-width: 800px; padding: 0 20px; }
+        .hero-content h2 { font-size: 3.5rem; font-weight: 400; margin-bottom: 20px; line-height: 1.2; letter-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: 1.2rem; color: #f1f5f9; line-height: 1.7; font-style: italic; margin-bottom: 35px; }
+        
+        .btn-luxury { display: inline-block; padding: 14px 38px; background: #ffffff; color: #1e1b4b; text-decoration: none; font-family: sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s; border: 1px solid #ffffff; }
+        .btn-luxury:hover { background: transparent; color: #ffffff; transform: translateY(-2px); }
+
+        /* Section Layout Presets */
+        section { padding: 90px 40px; max-width: 1150px; margin: 0 auto; border-top: 1px solid #e2e8f0; }
+        .section-title { font-size: 2.1rem; color: #1e1b4b; text-align: center; margin-bottom: 12px; font-weight: 400; }
+        .section-subtitle { font-size: 0.85rem; font-family: sans-serif; color: #b45309; text-transform: uppercase; letter-spacing: 2px; text-align: center; margin-bottom: 55px; font-weight: 600; }
+
+        /* About Block Grid Layout */
+        .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; }
+        .about-text p { font-size: 1.1rem; color: #475569; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
+        .about-badge { background: #ffffff; border: 1px solid #cbd5e1; padding: 30px; border-left: 4px solid #b45309; box-shadow: 0 10px 30px rgba(0,0,0,0.01); }
+        .badge-title { font-size: 1.8rem; color: #1e1b4b; margin-bottom: 10px; }
+        .badge-desc { font-family: sans-serif; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Course Dynamic Interactive Selection Box Slider */
+        .course-slider-box { max-width: 800px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; position: relative; box-shadow: 0 20px 45px rgba(0,0,0,0.02); }
+        .course-slide { display: none; }
+        .course-slide.show { display: block; animation: smoothFade 0.5s ease; }
+        @keyframes smoothFade { from { opacity: 0; } to { opacity: 1; } }
+        .c-meta { font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 600; margin-bottom: 15px; display: block; }
+        .c-title { font-size: 1.7rem; color: #1e1b4b; margin-bottom: 15px; font-weight: 400; }
+        .c-desc { font-size: 1.05rem; color: #475569; line-height: 1.7; margin-bottom: 20px; }
+        .c-time { font-family: sans-serif; font-size: 0.9rem; font-weight: 600; color: #1e1b4b; }
+        .slider-controls { display: flex; justify-content: space-between; margin-top: 35px; border-top: 1px solid #f1f5f9; padding-top: 25px; }
+        .ctrl-btn { background: none; border: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: #1e1b4b; cursor: pointer; transition: color 0.2s; }
+        .ctrl-btn:hover { color: #b45309; }
+
+        /* Elegant Enrollment Application Dashboard Layout */
+        .form-frame { max-width: 650px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; padding: 45px; box-shadow: 0 25px 50px rgba(0,0,0,0.02); }
+        .input-group { margin-bottom: 22px; }
+        .input-group label { display: block; font-family: sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #475569; margin-bottom: 8px; font-weight: 600; }
+        .input-group input, .input-group select { width: 100%; padding: 14px; background: #fafaf6; border: 1px solid #cbd5e1; font-size: 1rem; color: #1e293b; outline: none; transition: border-color 0.3s; }
+        .input-group input:focus, .input-group select:focus { border-color: #1e1b4b; background: #ffffff; }
+        .submit-btn { width: 100%; padding: 16px; background: #1e1b4b; color: #ffffff; border: none; font-family: sans-serif; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: background 0.3s; }
+        .submit-btn:hover { background: #b45309; }
+
+        /* Contact Details Footer Panels */
+        .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto; }
+        .contact-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 30px; text-align: center; }
+        .contact-card h4 { font-size: 1.15rem; color: #1e1b4b; margin-bottom: 8px; font-weight: 500; }
+        .contact-card p { font-family: sans-serif; font-size: 0.95rem; color: #475569; line-height: 1.6; }
+        footer { padding: 40px 20px; text-align: center; background: #1e1b4b; color: #94a3b8; font-family: sans-serif; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* Responsive Layout Overrides */
+        @media(max-width: 768px) {
+            nav { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .nav-links { gap: 20px; }
+            .hero-viewport { margin-top: 140px; height: 60vh; }
+            .hero-content h2 { font-size: 2.2rem; }
+            .about-grid, .contact-row { grid-template-columns: 1fr; gap: 30px; }
+            section { padding: 60px 20px; }
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-white font-sans overflow-x-hidden">
+<body>
 
-    <!-- 3D Background Container -->
-    <div id="canvas-3d"></div>
-
-    <!-- Navigation Header -->
-    <nav class="p-6 flex justify-between items-center bg-slate-900/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-slate-800">
-        <h1 class="text-2xl font-bold tracking-wider text-teal-400">DRUGYEL INSTITUTE</h1>
-        <p class="text-sm text-slate-400">Est. 2025 | Paro, Bhutan</p>
+    <!-- Floating Top Menu Header Navigation -->
+    <nav>
+        <div class="logo-container">
+            <!-- ⬇️ CONFIGURATION: Replace 'logo.png' with your logo file name uploaded to GitHub -->
+            <img src="logo.png" alt="Institute Logo" class="logo-image" onerror="this.style.display='none'">
+            <div class="logo-text">
+                <h1>Drugyel Institute</h1>
+                <p>EST. 2025 • PARO, BHUTAN</p>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#courses">Courses</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </nav>
 
-    <!-- Hero Section with 3D Interaction overlay -->
-    <header class="h-100vh min-h-[80vh] flex flex-col justify-center items-center text-center px-4 pt-20">
-        <h2 class="text-5xl md:text-6xl font-black mb-4 drop-shadow-lg text-white">Empowering Minds in Drugyel</h2>
-        <p class="text-lg md:text-xl text-teal-300 max-w-xl mb-8 font-medium">Advanced computer literacy, professional accounting modules, and comprehensive academic support.</p>
-        <a href="#register" class="bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold px-8 py-3 rounded-full transition duration-300 shadow-lg shadow-teal-500/20">Enroll Online Now</a>
-    </header>
-
-    <!-- Interactive Course Showcase Slider Section -->
-    <section class="py-16 bg-slate-850 px-4 max-w-4xl mx-auto">
-        <h3 class="text-3xl font-bold text-center mb-8 border-b-2 border-teal-500 pb-2 inline-block mx-auto w-full">Featured Training Programs</h3>
-        <div id="slider-container" class="relative bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
-            <!-- Slide 1 -->
-            <div class="slide active">
-                <span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Accounting Specialist</span>
-                <h4 class="text-2xl font-bold mt-2">TallyPrime Advance Suite</h4>
-                <p class="text-slate-400 mt-2">Master advanced accounting systems, inventory management, taxation tracking, and financial analysis protocols.</p>
-                <p class="text-teal-400 font-bold mt-4">⏳ Duration: 6 Months</p>
-            </div>
-            <!-- Slide 2 -->
-            <div class="slide">
-                <span class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Corporate Ready</span>
-                <h4 class="text-2xl font-bold mt-2">Auditing of Books of Accounts</h4>
-                <p class="text-slate-400 mt-2">Practical verification frameworks, auditing checklists, balance sheet reconciliation, and statutory standard tracking.</p>
-                <p class="text-purple-400 font-bold mt-4">⏳ Duration: 1 Month</p>
-            </div>
-            <!-- Slide 3 -->
-            <div class="slide">
-                <span class="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">Academic Support</span>
-                <h4 class="text-2xl font-bold mt-2">Comprehensive Subject Tuition</h4>
-                <p class="text-slate-400 mt-2">Targeted academic guidance for school level curriculum subjects designed to build conceptual depth and exam confidence.</p>
-                <p class="text-amber-400 font-bold mt-4">⏳ Duration: Flexible / Ongoing</p>
-            </div>
-            <!-- Slider Controls -->
-            <div class="flex justify-between mt-8">
-                <button onclick="moveSlide(-1)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm">◀ Previous</button>
-                <button onclick="moveSlide(1)" class="bg-teal-600 hover:bg-teal-500 px-4 py-2 rounded-lg text-sm">Next ▶</button>
-            </div>
+    <!-- Parallax 3D Workspace Hero Slider Frame -->
+    <div class="hero-viewport" id="hero-area">
+        <div class="photo-slide-container" id="parallax-layer">
+            <!-- ⬇️ CONFIGURATION: Replace 'photo1.jpg', 'photo2.jpg', 'photo3.jpg' with your photo filenames -->
+            <img src="photo1.jpg" alt="Campus View 1" class="img-layer active">
+            <img src="photo2.jpg" alt="Campus View 2" class="img-layer">
+            <img src="photo3.jpg" alt="Campus View 3" class="img-layer">
         </div>
-    </section>
-
-    <!-- Student Registration Form System (Connected to Formspree) -->
-    <section id="register" class="py-16 bg-slate-900 px-4 max-w-xl mx-auto">
-        <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
-            <h3 class="text-2xl font-bold mb-6 text-center text-teal-400">Student Course Registration</h3>
-            
-            <!-- Replace "YOUR_FORMSPREE_ID" with your actual Formspree endpoint ID later -->
-            <form action="https://formspree.io" method="POST" class="space-y-4">
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">Full Name</label>
-                    <input type="text" name="name" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">Contact Phone Number</label>
-                    <input type="tel" name="phone" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-1">Select Program Course</label>
-                    <select name="course" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 focus:outline-none focus:border-teal-500 text-white">
-                        <option value="Digital Literacy">Digital Literacy Training (1 Month)</option>
-                        <option value="TallyPrime Basic">TallyPrime Basic (3 Months)</option>
-                        <option value="TallyPrime Advance">TallyPrime Advance (6 Months)</option>
-                        <option value="Auditing of Books">Auditing of Books of Accounts (1 Month)</option>
-                        <option value="Basic Computer">Basic Computer Application (2 Months)</option>
-                        <option value="Advance Computer">Advance Computer Application (3 Months)</option>
-                        <option value="Tuition">All Subject Academic Tuition</option>
-                        <option value="AI Productivity">Short Term: AI Productivity Tools (2 Weeks)</option>
-                        <option value="Web Design">Short Term: Web Design HTML/CSS (1 Month)</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold p-3 rounded-lg transition duration-200 mt-4">Submit Application</button>
-            </form>
+        <div class="hero-content">
+            <h2>Empowering Minds in Drugyel</h2>
+            <p>Advanced digital processing applications, professional accounting bookkeeping models, and comprehensive academic scholastic development systems.</p>
+            <a href="#register" class="btn-luxury">Enroll Online Now</a>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer with Institutional Meta -->
-    <footer class="py-8 text-center border-t border-slate-800 text-slate-500 text-sm">
-        © 2026 Drugyel Training Institute. Paro, Bhutan. All Rights Reserved.
-    </footer>
-
-    <!-- Frontend Core Scripts Code -->
-    <script>
-        // 1. Core Simple Text Slider Engine Implementation
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        function moveSlide(direction) {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-
-        // 2. Three.js 3D Animated Geometry Background
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-3d').appendChild(renderer.domElement);
-
-        // Populate space with floating 3D mathematical geometry
-        const geometry = new THREE.IcosahedronGeometry(2, 0);
-        const material = new THREE.MeshBasicMaterial({ color: 0x14b8a6, wireframe: true, transparent: true, opacity: 0.15 });
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        camera.position.z = 5;
-
-        // Visual animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            mesh.rotation.x += 0.002;
-            mesh.rotation.y += 0.003;
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Responsive window scaling
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-</body>
-</html>
+    <!-- About Section Content -->
+    <section id="about">
+        <h3 class="section-title">About The Institution</h3>
+        <p class="section-subtitle">Academic Legacy & Location</p>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>Located in the scenic landscape of Drugyel, Paro, our institution serves as a center for technical training and academic growth. Founded last year, we bridge the gap between traditional learning and modern technological skills.</p>
+                <p>We provide students with rigorous training programs designed to prepare them directly for corporate operations, technology management, and higher academic success.</p>
+            </div>
+            <div class="about-badge">
+                <h4 class="badge-title">Drugyel, Paro</h4>
